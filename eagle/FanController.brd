@@ -1439,22 +1439,6 @@ www.irf.com&lt;p&gt;
 </package>
 </packages>
 </library>
-<library name="MAX600X - Voltage Reference">
-<packages>
-<package name="SOT23-3">
-<wire x1="-1.5" y1="0.7" x2="-1.5" y2="-0.7" width="0.127" layer="21"/>
-<wire x1="1.5" y1="0.7" x2="1.5" y2="-0.7" width="0.127" layer="21"/>
-<smd name="3_GND" x="0" y="1" dx="0.8" dy="1.4" layer="1"/>
-<smd name="1_IN" x="-1" y="-1" dx="0.8" dy="1.4" layer="1"/>
-<smd name="2_OUT" x="1" y="-1" dx="0.8" dy="1.4" layer="1"/>
-<text x="-2" y="0" size="0.5" layer="25" font="vector" rot="R270" align="center">&gt;NAME</text>
-<text x="2" y="0" size="0.5" layer="27" font="vector" rot="R270" align="center">&gt;VALUE</text>
-<wire x1="-0.5" y1="-0.7" x2="0.5" y2="-0.7" width="0.127" layer="21"/>
-<wire x1="0.5" y1="0.7" x2="1.5" y2="0.7" width="0.127" layer="21"/>
-<wire x1="-1.5" y1="0.7" x2="-0.5" y2="0.7" width="0.127" layer="21"/>
-</package>
-</packages>
-</library>
 <library name="tag-connect">
 <description>&lt;h3&gt;TAG-CONNECT ICSP Connector&lt;/h3&gt;&lt;BR&gt;&lt;I&gt;Manufacturer:&lt;/I&gt; &lt;a href="http://www.tag-connect.com"&gt;Tag-Connect&lt;/a&gt;&lt;BR&gt;
 &lt;BR&gt;Cable for easy In-Circuit Serial Programming. Designed for Microchip ICD2, suitable for many others.&lt;BR&gt;
@@ -1771,10 +1755,6 @@ Note, that not all DRC settings must be set by the manufacturer. Several can be 
 <attribute name="NAME" x="19" y="15" size="0.5" layer="25" font="vector" align="center"/>
 <attribute name="VALUE" x="19.25" y="8.75" size="0.5" layer="27" font="vector" align="center"/>
 </element>
-<element name="IC202" library="MAX600X - Voltage Reference" package="SOT23-3" value="MAX6002EUR+T" x="14" y="14.05" smashed="yes">
-<attribute name="NAME" x="14" y="16.3" size="0.5" layer="25" font="vector" align="center"/>
-<attribute name="VALUE" x="14" y="14.05" size="0.5" layer="27" font="vector" rot="R270" align="center"/>
-</element>
 <element name="SWD101" library="tag-connect" package="TC2030-NL" value="TC2030-NL" x="25" y="12" smashed="yes">
 <attribute name="VALUE" x="30.75" y="12" size="0.5" layer="27" font="vector" rot="R270" align="center"/>
 </element>
@@ -1821,7 +1801,6 @@ Note, that not all DRC settings must be set by the manufacturer. Several can be 
 <contactref element="C207" pad="1"/>
 <contactref element="C201" pad="1"/>
 <contactref element="C205" pad="1"/>
-<contactref element="IC202" pad="3_GND"/>
 <contactref element="IC201" pad="16_VSS"/>
 <contactref element="TEMP400" pad="3"/>
 <contactref element="TEMP500" pad="3"/>
@@ -1880,7 +1859,6 @@ Note, that not all DRC settings must be set by the manufacturer. Several can be 
 <via x="23.5" y="12" extent="1-16" drill="0.35"/>
 <via x="31.25" y="12" extent="1-16" drill="0.35"/>
 <via x="11" y="12" extent="1-16" drill="0.35"/>
-<via x="14" y="12.75" extent="1-16" drill="0.35"/>
 </signal>
 <signal name="3V3" class="4">
 <contactref element="SWD101" pad="1_TVCC"/>
@@ -1888,7 +1866,6 @@ Note, that not all DRC settings must be set by the manufacturer. Several can be 
 <contactref element="C101" pad="1"/>
 <contactref element="C201" pad="2"/>
 <contactref element="C205" pad="2"/>
-<contactref element="IC202" pad="1_IN"/>
 <contactref element="IC201" pad="17_VDD"/>
 <contactref element="IC201" pad="18_VDDIO2"/>
 <contactref element="TEMP400" pad="1"/>
@@ -1922,15 +1899,18 @@ Note, that not all DRC settings must be set by the manufacturer. Several can be 
 <wire x1="19" y1="15" x2="18" y2="14" width="0.25" layer="16"/>
 <wire x1="18" y1="14" x2="12.25" y2="14" width="0.25" layer="16"/>
 <wire x1="22.05" y1="9" x2="21.75" y2="9" width="0.25" layer="1"/>
-<wire x1="26.27" y1="11.36" x2="26.5143125" y2="11.36" width="0.25" layer="1"/>
 <wire x1="22.05" y1="15" x2="21.75" y2="15" width="0.25" layer="1"/>
 <wire x1="10.95" y1="15" x2="11.25" y2="15" width="0.25" layer="1"/>
-<wire x1="13" y1="14.25" x2="13" y2="13.05" width="0.25" layer="1"/>
-<wire x1="11.25" y1="15" x2="12.25" y2="15" width="0.25" layer="1"/>
-<wire x1="12.25" y1="15" x2="13" y2="14.25" width="0.25" layer="1"/>
 <wire x1="26.27" y1="7.02" x2="26.25" y2="7" width="0.25" layer="16"/>
 <wire x1="26.27" y1="11.36" x2="26.27" y2="7.02" width="0.25" layer="16"/>
 <wire x1="26.27" y1="11.365" x2="26.27" y2="11.36" width="0.25" layer="1"/>
+<contactref element="IC201" pad="5_VDDA"/>
+<contactref element="C204" pad="2"/>
+<wire x1="11.15" y1="12.95" x2="14.25" y2="12.95" width="0.25" layer="1"/>
+<wire x1="14.95" y1="11" x2="15.45" y2="11.5" width="0.25" layer="1"/>
+<wire x1="15.45" y1="11.5" x2="17.02" y2="11.5" width="0.25" layer="1"/>
+<wire x1="14.95" y1="11" x2="14.95" y2="12.25" width="0.25" layer="1"/>
+<wire x1="14.95" y1="12.25" x2="14.25" y2="12.95" width="0.25" layer="1"/>
 </signal>
 <signal name="SYS_NRST" class="1">
 <contactref element="SWD101" pad="3_T_NRST"/>
@@ -1952,7 +1932,6 @@ Note, that not all DRC settings must be set by the manufacturer. Several can be 
 <wire x1="25.75" y1="10.25" x2="24.5" y2="10.25" width="0.25" layer="1"/>
 <wire x1="24.5" y1="10.25" x2="24" y2="10.75" width="0.25" layer="1"/>
 <wire x1="24" y1="10.75" x2="23.5" y2="10.75" width="0.25" layer="1"/>
-<wire x1="27.54" y1="11.36" x2="27.7843125" y2="11.36" width="0.25" layer="1"/>
 <wire x1="27.54" y1="11.365" x2="27.54" y2="11.36" width="0.25" layer="1"/>
 </signal>
 <signal name="SYS_SWCLK" class="1">
@@ -1963,7 +1942,6 @@ Note, that not all DRC settings must be set by the manufacturer. Several can be 
 <wire x1="20.5" y1="16" x2="21" y2="16.5" width="0.25" layer="1"/>
 <wire x1="21" y1="16.5" x2="26" y2="16.5" width="0.25" layer="1"/>
 <wire x1="26" y1="16.5" x2="27.54" y2="14.96" width="0.25" layer="1"/>
-<wire x1="27.7839375" y1="12.632" x2="27.539" y2="12.632" width="0.25" layer="1"/>
 <wire x1="27.54" y1="12.635" x2="27.54" y2="14.96" width="0.25" layer="1"/>
 <wire x1="27.54" y1="12.635" x2="27.54" y2="12.633" width="0.25" layer="1"/>
 <wire x1="27.54" y1="12.633" x2="27.539" y2="12.632" width="0.25" layer="1"/>
@@ -1981,7 +1959,6 @@ Note, that not all DRC settings must be set by the manufacturer. Several can be 
 <wire x1="26.27" y1="12.73" x2="25.5" y2="13.5" width="0.25" layer="16"/>
 <wire x1="25.5" y1="13.5" x2="20" y2="13.5" width="0.25" layer="16"/>
 <wire x1="20" y1="13.5" x2="19.5" y2="13" width="0.25" layer="16"/>
-<wire x1="26.27" y1="12.64" x2="26.525684375" y2="12.64" width="0.25" layer="1"/>
 <wire x1="26.27" y1="12.635" x2="26.27" y2="12.64" width="0.25" layer="1"/>
 </signal>
 <signal name="VDD" class="4">
@@ -2056,15 +2033,6 @@ Note, that not all DRC settings must be set by the manufacturer. Several can be 
 <wire x1="39" y1="9.46" x2="41" y2="9.46" width="0.25" layer="1"/>
 <wire x1="39" y1="9.46" x2="36.79" y2="7.25" width="0.25" layer="1"/>
 </signal>
-<signal name="STM32:VCCA">
-<contactref element="IC201" pad="5_VDDA"/>
-<contactref element="IC202" pad="2_OUT"/>
-<contactref element="C204" pad="2"/>
-<wire x1="17.02" y1="11.5" x2="15.45" y2="11.5" width="0.25" layer="1"/>
-<wire x1="15.45" y1="11.5" x2="14.95" y2="11" width="0.25" layer="1"/>
-<wire x1="14.95" y1="11" x2="15" y2="11.05" width="0.25" layer="1"/>
-<wire x1="15" y1="11.05" x2="15" y2="13.05" width="0.25" layer="1"/>
-</signal>
 <signal name="FAN:N$1">
 <contactref element="FAN_300" pad="3"/>
 <contactref element="Q302" pad="3"/>
@@ -2096,7 +2064,6 @@ Note, that not all DRC settings must be set by the manufacturer. Several can be 
 <approved hash="19,1,625f60006c4c6e13"/>
 <approved hash="19,1,52de501f5c535e92"/>
 <approved hash="19,1,12db10185c545e97"/>
-<approved hash="19,1,eb1de81f94539751"/>
 <approved hash="19,1,5e465a19649f60c0"/>
 <approved hash="19,1,52c652996c1f6c40"/>
 <approved hash="19,1,d2cad269f5eff54c"/>

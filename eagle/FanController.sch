@@ -8691,54 +8691,6 @@ Source: http://www.mouser.com/ds/2/392/products_18-2245.pdf</description>
 </deviceset>
 </devicesets>
 </library>
-<library name="MAX600X - Voltage Reference">
-<packages>
-<package name="SOT23-3">
-<wire x1="-1.5" y1="0.7" x2="-1.5" y2="-0.7" width="0.127" layer="21"/>
-<wire x1="1.5" y1="0.7" x2="1.5" y2="-0.7" width="0.127" layer="21"/>
-<smd name="3_GND" x="0" y="1" dx="0.8" dy="1.4" layer="1"/>
-<smd name="1_IN" x="-1" y="-1" dx="0.8" dy="1.4" layer="1"/>
-<smd name="2_OUT" x="1" y="-1" dx="0.8" dy="1.4" layer="1"/>
-<text x="-2" y="0" size="0.5" layer="25" font="vector" rot="R270" align="center">&gt;NAME</text>
-<text x="2" y="0" size="0.5" layer="27" font="vector" rot="R270" align="center">&gt;VALUE</text>
-<wire x1="-0.5" y1="-0.7" x2="0.5" y2="-0.7" width="0.127" layer="21"/>
-<wire x1="0.5" y1="0.7" x2="1.5" y2="0.7" width="0.127" layer="21"/>
-<wire x1="-1.5" y1="0.7" x2="-0.5" y2="0.7" width="0.127" layer="21"/>
-</package>
-</packages>
-<symbols>
-<symbol name="MAX600X">
-<pin name="1_VCC" x="-10.16" y="2.54" length="middle" direction="pwr"/>
-<pin name="3_GND" x="-10.16" y="-5.08" length="middle" direction="pwr"/>
-<pin name="2_OUT" x="10.16" y="0" length="middle" direction="out" rot="R180"/>
-<wire x1="-5.08" y1="5.08" x2="-5.08" y2="-7.62" width="0.254" layer="94"/>
-<wire x1="-5.08" y1="-7.62" x2="5.08" y2="-7.62" width="0.254" layer="94"/>
-<wire x1="5.08" y1="-7.62" x2="5.08" y2="5.08" width="0.254" layer="94"/>
-<wire x1="5.08" y1="5.08" x2="-5.08" y2="5.08" width="0.254" layer="94"/>
-<text x="0" y="7.62" size="1.27" layer="95" font="vector" align="center">&gt;NAME</text>
-<text x="0" y="-10.16" size="1.27" layer="96" font="vector" align="center">&gt;VALUE</text>
-</symbol>
-</symbols>
-<devicesets>
-<deviceset name="MAX600X" prefix="IC" uservalue="yes">
-<gates>
-<gate name="G$1" symbol="MAX600X" x="0" y="0"/>
-</gates>
-<devices>
-<device name="" package="SOT23-3">
-<connects>
-<connect gate="G$1" pin="1_VCC" pad="1_IN"/>
-<connect gate="G$1" pin="2_OUT" pad="2_OUT"/>
-<connect gate="G$1" pin="3_GND" pad="3_GND"/>
-</connects>
-<technologies>
-<technology name=""/>
-</technologies>
-</device>
-</devices>
-</deviceset>
-</devicesets>
-</library>
 <library name="con-molex" urn="urn:adsk.eagle:library:165">
 <description>&lt;b&gt;Molex Connectors&lt;/b&gt;&lt;p&gt;
 &lt;author&gt;Created by librarian@cadsoft.de&lt;/author&gt;</description>
@@ -9112,14 +9064,14 @@ www.irf.com&lt;p&gt;
 <part name="SUPPLY3" library="Power_Symbols" library_urn="urn:adsk.eagle:library:16502351" deviceset="GND-BAR" device="" value="GND"/>
 <part name="C5" library="rcl" library_urn="urn:adsk.eagle:library:334" deviceset="C-EU" device="C0805" package3d_urn="urn:adsk.eagle:package:23617/2" value="0.1u"/>
 <part name="SUPPLY7" library="Power_Symbols" library_urn="urn:adsk.eagle:library:16502351" deviceset="GND-BAR" device="" value="GND"/>
-<part name="IC2" library="MAX600X - Voltage Reference" deviceset="MAX600X" device="" value="MAX6002EUR+T"/>
-<part name="SUPPLY4" library="Power_Symbols" library_urn="urn:adsk.eagle:library:16502351" deviceset="GND-BAR" device="" value="GND"/>
 <part name="C4" library="rcl" library_urn="urn:adsk.eagle:library:334" deviceset="C-EU" device="C0805" package3d_urn="urn:adsk.eagle:package:23617/2" value="1u"/>
 <part name="SUPPLY6" library="Power_Symbols" library_urn="urn:adsk.eagle:library:16502351" deviceset="GND-BAR" device="" value="GND"/>
 <part name="SUPPLY8" library="Power_Symbols" library_urn="urn:adsk.eagle:library:16502351" deviceset="3V3-CIRCLE" device="" value="3V3"/>
 <part name="SUPPLY10" library="Power_Symbols" library_urn="urn:adsk.eagle:library:16502351" deviceset="3V3-CIRCLE" device="" value="3V3"/>
 <part name="SUPPLY1" library="Power_Symbols" library_urn="urn:adsk.eagle:library:16502351" deviceset="3V3-CIRCLE" device="" value="3V3"/>
 <part name="SUPPLY2" library="Power_Symbols" library_urn="urn:adsk.eagle:library:16502351" deviceset="GND-BAR" device="" value="GND"/>
+<part name="SUPPLY4" library="Power_Symbols" library_urn="urn:adsk.eagle:library:16502351" deviceset="3V3-CIRCLE" device="" value="3V3"/>
+<part name="SUPPLY5" library="Power_Symbols" library_urn="urn:adsk.eagle:library:16502351" deviceset="3V3-CIRCLE" device="" value="3V3"/>
 </parts>
 <sheets>
 <sheet>
@@ -9159,13 +9111,6 @@ www.irf.com&lt;p&gt;
 <instance part="SUPPLY7" gate="G$1" x="91.44" y="10.16" smashed="yes">
 <attribute name="VALUE" x="91.44" y="8.255" size="1.778" layer="96" align="center"/>
 </instance>
-<instance part="IC2" gate="G$1" x="45.72" y="53.34" smashed="yes">
-<attribute name="NAME" x="45.72" y="60.96" size="1.27" layer="95" font="vector" align="center"/>
-<attribute name="VALUE" x="45.72" y="43.18" size="1.27" layer="96" font="vector" align="center"/>
-</instance>
-<instance part="SUPPLY4" gate="G$1" x="30.48" y="45.72" smashed="yes">
-<attribute name="VALUE" x="30.48" y="43.815" size="1.778" layer="96" align="center"/>
-</instance>
 <instance part="C4" gate="G$1" x="53.34" y="17.78" smashed="yes" rot="R180">
 <attribute name="NAME" x="50.8" y="20.32" size="1.778" layer="95" rot="R180"/>
 <attribute name="VALUE" x="50.8" y="17.78" size="1.778" layer="96" rot="R180"/>
@@ -9184,6 +9129,12 @@ www.irf.com&lt;p&gt;
 </instance>
 <instance part="SUPPLY2" gate="G$1" x="152.4" y="109.22" smashed="yes" rot="R90">
 <attribute name="VALUE" x="154.305" y="109.22" size="1.778" layer="96" rot="R90" align="center"/>
+</instance>
+<instance part="SUPPLY4" gate="G$1" x="152.4" y="147.32" smashed="yes" rot="R270">
+<attribute name="VALUE" x="155.575" y="147.447" size="1.778" layer="96" rot="R270" align="bottom-center"/>
+</instance>
+<instance part="SUPPLY5" gate="G$1" x="53.34" y="27.94" smashed="yes">
+<attribute name="VALUE" x="53.213" y="31.115" size="1.778" layer="96" align="bottom-center"/>
 </instance>
 </instances>
 <busses>
@@ -9218,11 +9169,6 @@ www.irf.com&lt;p&gt;
 <wire x1="91.44" y1="15.24" x2="91.44" y2="12.7" width="0.1524" layer="91"/>
 </segment>
 <segment>
-<pinref part="IC2" gate="G$1" pin="3_GND"/>
-<wire x1="35.56" y1="48.26" x2="30.48" y2="48.26" width="0.1524" layer="91"/>
-<pinref part="SUPPLY4" gate="G$1" pin="GND"/>
-</segment>
-<segment>
 <pinref part="IC1" gate="G$1" pin="GND_16"/>
 <wire x1="137.16" y1="109.22" x2="149.86" y2="109.22" width="0.1524" layer="91"/>
 <pinref part="SUPPLY2" gate="G$1" pin="GND"/>
@@ -9240,11 +9186,6 @@ www.irf.com&lt;p&gt;
 <pinref part="SUPPLY10" gate="G$1" pin="3V3"/>
 </segment>
 <segment>
-<pinref part="IC2" gate="G$1" pin="1_VCC"/>
-<wire x1="35.56" y1="55.88" x2="30.48" y2="55.88" width="0.1524" layer="91"/>
-<label x="30.48" y="55.88" size="1.778" layer="95" rot="R180"/>
-</segment>
-<segment>
 <pinref part="IC1" gate="G$1" pin="VCC_17"/>
 <wire x1="137.16" y1="106.68" x2="149.86" y2="106.68" width="0.1524" layer="91"/>
 <pinref part="SUPPLY1" gate="G$1" pin="3V3"/>
@@ -9252,6 +9193,17 @@ www.irf.com&lt;p&gt;
 <wire x1="137.16" y1="104.14" x2="149.86" y2="104.14" width="0.1524" layer="91"/>
 <wire x1="149.86" y1="104.14" x2="149.86" y2="106.68" width="0.1524" layer="91"/>
 <junction x="149.86" y="106.68"/>
+</segment>
+<segment>
+<pinref part="IC1" gate="G$1" pin="VCCA_5"/>
+<wire x1="137.16" y1="147.32" x2="149.86" y2="147.32" width="0.1524" layer="91"/>
+<pinref part="SUPPLY4" gate="G$1" pin="3V3"/>
+</segment>
+<segment>
+<wire x1="53.34" y1="22.86" x2="53.34" y2="25.4" width="0.1524" layer="91"/>
+<pinref part="C4" gate="G$1" pin="2"/>
+<pinref part="SUPPLY5" gate="G$1" pin="3V3"/>
+<label x="53.34" y="22.86" size="1.778" layer="95" xref="yes"/>
 </segment>
 </net>
 <net name="TEMP1_SIGNAL" class="0">
@@ -9324,23 +9276,6 @@ www.irf.com&lt;p&gt;
 <wire x1="137.16" y1="127" x2="149.86" y2="127" width="0.1524" layer="91"/>
 <label x="149.86" y="127" size="1.778" layer="95" xref="yes"/>
 <pinref part="IC1" gate="G$1" pin="ADC_IN5,TSC_G2_IO2,TIM2_CH1_ETR,CEC,SPI1_SCK,I2S1_CK-PA5_11"/>
-</segment>
-</net>
-<net name="VCCA" class="0">
-<segment>
-<pinref part="IC1" gate="G$1" pin="VCCA_5"/>
-<wire x1="137.16" y1="147.32" x2="149.86" y2="147.32" width="0.1524" layer="91"/>
-<label x="149.86" y="147.32" size="1.778" layer="95"/>
-</segment>
-<segment>
-<pinref part="IC2" gate="G$1" pin="2_OUT"/>
-<wire x1="55.88" y1="53.34" x2="60.96" y2="53.34" width="0.1524" layer="91"/>
-<label x="60.96" y="53.34" size="1.778" layer="95"/>
-</segment>
-<segment>
-<wire x1="53.34" y1="22.86" x2="53.34" y2="27.94" width="0.1524" layer="91"/>
-<pinref part="C4" gate="G$1" pin="2"/>
-<label x="53.34" y="27.94" size="1.778" layer="95" rot="R180"/>
 </segment>
 </net>
 </nets>
@@ -9796,12 +9731,10 @@ www.irf.com&lt;p&gt;
 <approved hash="104,1,96.52,144.78,SWD101,1_T_VCC,3V3,,,"/>
 <approved hash="104,1,96.52,154.94,SWD101,5_GND,GND,,,"/>
 <approved hash="202,1,96.52,157.48,SWD101,6_T-SWO,,,,"/>
-<approved hash="104,1@STM32,137.16,147.32,IC1,VCCA_5,VCCA,,,"/>
+<approved hash="104,1@STM32,137.16,147.32,IC1,VCCA_5,3V3,,,"/>
 <approved hash="104,1@STM32,137.16,109.22,IC1,GND_16,GND,,,"/>
 <approved hash="104,1@STM32,137.16,106.68,IC1,VCC_17,3V3,,,"/>
 <approved hash="104,1@STM32,137.16,104.14,IC1,VCCD_18,3V3,,,"/>
-<approved hash="104,1@STM32,35.56,55.88,IC2,1_VCC,3V3,,,"/>
-<approved hash="104,1@STM32,35.56,48.26,IC2,3_GND,GND,,,"/>
 <approved hash="213,1,116.84,81.28,FAN_TACHO,in,,,,"/>
 <approved hash="213,1,104.14,111.76,SYS_NRST,in,,,,"/>
 <approved hash="213,1,152.4,101.6,TEMP1_SIGNAL,in,,,,"/>
