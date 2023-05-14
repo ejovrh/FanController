@@ -59,12 +59,14 @@ void Error_Handler(void);
 /* USER CODE END EFP */
 
 /* Private defines -----------------------------------------------------------*/
-#define TEMP1_Pin GPIO_PIN_2
-#define TEMP1_GPIO_Port GPIOA
-#define TEMP2_Pin GPIO_PIN_3
-#define TEMP2_GPIO_Port GPIOA
-#define TEMP3_Pin GPIO_PIN_4
-#define TEMP3_GPIO_Port GPIOA
+#define TIMER_PRESCALER 799
+#define TIMER1_PERIOD 2499
+#define TEMP1_SIGNAL_Pin GPIO_PIN_2
+#define TEMP1_SIGNAL_GPIO_Port GPIOA
+#define TEMP2_SIGNAL_Pin GPIO_PIN_3
+#define TEMP2_SIGNAL_GPIO_Port GPIOA
+#define TEMP3_SIGNAL_Pin GPIO_PIN_4
+#define TEMP3_SIGNAL_GPIO_Port GPIOA
 #define FAN_TACHO_Pin GPIO_PIN_5
 #define FAN_TACHO_GPIO_Port GPIOA
 #define FAN_PWM_Pin GPIO_PIN_6
