@@ -46,7 +46,7 @@ enum ADCChannels
 	  Temp1,  // temperature sensor 1 - PA2
 	  Temp2,  // temperature sensor 1 - PA3
 	  Temp3,	// temperature sensor 1 - PA4
-	  Temperature,  // internal temperature sensor
+	  Tempint,  // internal temperature sensor
 	  Vrefint  // internal reference voltage
 };
 /* USER CODE END EC */
@@ -67,13 +67,14 @@ void Error_Handler(void);
 
 /* Private defines -----------------------------------------------------------*/
 #define TIMER_PRESCALER 799
-#define TIMER1_PERIOD 2499
+#define TIMER1_PERIOD 1249
 #define TIMER3_PERIOD 99
 #define FAN_OFF 0
 #define FAN_DEBUG 70
 #define TIMER2_PERIOD 1250
 #define ADC_CHANNELS 5
 #define TACHO_BUFFER_LEN 2
+#define ADC_MEASURE_ITERATIONS 8
 #define TEMP1_SIGNAL_Pin GPIO_PIN_2
 #define TEMP1_SIGNAL_GPIO_Port GPIOA
 #define TEMP2_SIGNAL_Pin GPIO_PIN_3

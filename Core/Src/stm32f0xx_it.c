@@ -60,7 +60,16 @@ extern ADC_HandleTypeDef hadc;
 extern DMA_HandleTypeDef hdma_tim2_ch1;
 extern TIM_HandleTypeDef htim1;
 /* USER CODE BEGIN EV */
+extern uint32_t adc_buffer[ADC_CHANNELS];  // DMA buffer
+volatile uint32_t adc_avg_buffer[ADC_CHANNELS];  // values are summed up for average calculation
+extern volatile uint32_t adc[ADC_CHANNELS];  // final average value
 
+extern uint32_t tacho_buffer[TACHO_BUFFER_LEN];  // ditto
+volatile uint32_t tacho_avg_buffer[TACHO_BUFFER_LEN];
+extern volatile uint32_t tacho[TACHO_BUFFER_LEN];
+
+volatile uint8_t adc_iterator = 0;	// iterators
+volatile uint8_t tacho_iterator = 0;	//
 /* USER CODE END EV */
 
 /******************************************************************************/
@@ -149,6 +158,21 @@ void SysTick_Handler(void)
 void DMA1_Channel1_IRQHandler(void)
 {
 	/* USER CODE BEGIN DMA1_Channel1_IRQn 0 */
+	for(uint8_t i = 0; i < ADC_CHANNELS; ++i)
+		adc_avg_buffer[i] += adc_buffer[i];
+
+	++adc_iterator;
+
+	if(adc_iterator == ADC_MEASURE_ITERATIONS)
+		{
+			for(uint8_t i = 0; i < ADC_CHANNELS; ++i)
+				adc[i] = adc_avg_buffer[i] / adc_iterator;
+
+			for(uint8_t i = 0; i < ADC_CHANNELS; ++i)
+				adc_avg_buffer[i] = 0;
+
+			adc_iterator = 0;
+		}
 
 	/* USER CODE END DMA1_Channel1_IRQn 0 */
 	HAL_DMA_IRQHandler(&hdma_adc);
@@ -164,6 +188,7 @@ void DMA1_Channel4_5_IRQHandler(void)
 {
 	/* USER CODE BEGIN DMA1_Channel4_5_IRQn 0 */
 
+	++tacho_iterator;
 	/* USER CODE END DMA1_Channel4_5_IRQn 0 */
 	HAL_DMA_IRQHandler(&hdma_tim2_ch1);
 	/* USER CODE BEGIN DMA1_Channel4_5_IRQn 1 */

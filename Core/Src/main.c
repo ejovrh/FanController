@@ -53,6 +53,11 @@ uint32_t adc_buffer[ADC_CHANNELS] =
 	{0};	// store for ADC readout
 uint32_t tacho_buffer[TACHO_BUFFER_LEN] =
 	{0};	// stores timer2 counter readout
+
+volatile uint32_t adc[ADC_CHANNELS] =
+	{0};	// store for ADC readout
+volatile uint32_t tacho[TACHO_BUFFER_LEN] =
+	{0};	// stores timer2 counter readout
 /* USER CODE END PV */
 
 /* Private function prototypes -----------------------------------------------*/
@@ -349,6 +354,7 @@ static void MX_TIM2_Init(void)
 		}
 	/* USER CODE BEGIN TIM2_Init 2 */
 	HAL_TIM_Base_Start_IT(&htim2);  // start the timer
+	__HAL_DMA_DISABLE_IT(&hdma_tim2_ch1, DMA_IT_HT | DMA_IT_TE);	// disable error & half-fransfer interrupts
 	HAL_TIM_IC_Start_DMA(&htim2, TIM_CHANNEL_1, tacho_buffer, TACHO_BUFFER_LEN);  // start timer2 DMA
 	/* USER CODE END TIM2_Init 2 */
 
