@@ -41,7 +41,14 @@ extern "C" {
 
 /* Exported constants --------------------------------------------------------*/
 /* USER CODE BEGIN EC */
-
+enum ADCChannels
+{  // order is important! - this MCU has no ranking and the order of channels is defined by channel number
+	  Temp1,  // temperature sensor 1 - PA2
+	  Temp2,  // temperature sensor 1 - PA3
+	  Temp3,	// temperature sensor 1 - PA4
+	  Temperature,  // internal temperature sensor
+	  Vrefint  // internal reference voltage
+};
 /* USER CODE END EC */
 
 /* Exported macro ------------------------------------------------------------*/
@@ -65,6 +72,8 @@ void Error_Handler(void);
 #define FAN_OFF 0
 #define FAN_DEBUG 70
 #define TIMER2_PERIOD 1250
+#define ADC_CHANNELS 5
+#define TACHO_BUFFER_LEN 2
 #define TEMP1_SIGNAL_Pin GPIO_PIN_2
 #define TEMP1_SIGNAL_GPIO_Port GPIOA
 #define TEMP2_SIGNAL_Pin GPIO_PIN_3
