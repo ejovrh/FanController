@@ -1,20 +1,20 @@
 /* USER CODE BEGIN Header */
 /**
-  ******************************************************************************
-  * @file           : main.c
-  * @brief          : Main program body
-  ******************************************************************************
-  * @attention
-  *
-  * Copyright (c) 2023 STMicroelectronics.
-  * All rights reserved.
-  *
-  * This software is licensed under terms that can be found in the LICENSE file
-  * in the root directory of this software component.
-  * If no LICENSE file comes with this software, it is provided AS-IS.
-  *
-  ******************************************************************************
-  */
+ ******************************************************************************
+ * @file           : main.c
+ * @brief          : Main program body
+ ******************************************************************************
+ * @attention
+ *
+ * Copyright (c) 2023 STMicroelectronics.
+ * All rights reserved.
+ *
+ * This software is licensed under terms that can be found in the LICENSE file
+ * in the root directory of this software component.
+ * If no LICENSE file comes with this software, it is provided AS-IS.
+ *
+ ******************************************************************************
+ */
 /* USER CODE END Header */
 /* Includes ------------------------------------------------------------------*/
 #include "main.h"
@@ -58,8 +58,8 @@ static void MX_GPIO_Init(void);
 static void MX_DMA_Init(void);
 static void MX_ADC_Init(void);
 static void MX_TIM2_Init(void);
-static void MX_TIM1_Init(void);
 static void MX_TIM3_Init(void);
+static void MX_TIM1_Init(void);
 /* USER CODE BEGIN PFP */
 
 /* USER CODE END PFP */
@@ -100,20 +100,20 @@ int main(void)
   MX_DMA_Init();
   MX_ADC_Init();
   MX_TIM2_Init();
-  MX_TIM1_Init();
   MX_TIM3_Init();
+  MX_TIM1_Init();
   /* USER CODE BEGIN 2 */
-
+	HAL_TIM_PWM_Start(&htim3, TIM_CHANNEL_1);  // start the PWM timer
   /* USER CODE END 2 */
 
   /* Infinite loop */
   /* USER CODE BEGIN WHILE */
-  while (1)
-  {
+	while(1)
+		{
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */
-  }
+		}
   /* USER CODE END 3 */
 }
 
@@ -252,16 +252,14 @@ static void MX_TIM1_Init(void)
 
   TIM_ClockConfigTypeDef sClockSourceConfig = {0};
   TIM_MasterConfigTypeDef sMasterConfig = {0};
-  TIM_OC_InitTypeDef sConfigOC = {0};
-  TIM_BreakDeadTimeConfigTypeDef sBreakDeadTimeConfig = {0};
 
   /* USER CODE BEGIN TIM1_Init 1 */
 
   /* USER CODE END TIM1_Init 1 */
   htim1.Instance = TIM1;
-  htim1.Init.Prescaler = 799;
+  htim1.Init.Prescaler = TIMER_PRESCALER;
   htim1.Init.CounterMode = TIM_COUNTERMODE_UP;
-  htim1.Init.Period = 9999;
+  htim1.Init.Period = TIMER1_PERIOD;
   htim1.Init.ClockDivision = TIM_CLOCKDIVISION_DIV1;
   htim1.Init.RepetitionCounter = 0;
   htim1.Init.AutoReloadPreload = TIM_AUTORELOAD_PRELOAD_DISABLE;
@@ -274,35 +272,9 @@ static void MX_TIM1_Init(void)
   {
     Error_Handler();
   }
-  if (HAL_TIM_OC_Init(&htim1) != HAL_OK)
-  {
-    Error_Handler();
-  }
-  sMasterConfig.MasterOutputTrigger = TIM_TRGO_RESET;
+  sMasterConfig.MasterOutputTrigger = TIM_TRGO_UPDATE;
   sMasterConfig.MasterSlaveMode = TIM_MASTERSLAVEMODE_DISABLE;
   if (HAL_TIMEx_MasterConfigSynchronization(&htim1, &sMasterConfig) != HAL_OK)
-  {
-    Error_Handler();
-  }
-  sConfigOC.OCMode = TIM_OCMODE_TIMING;
-  sConfigOC.Pulse = 0;
-  sConfigOC.OCPolarity = TIM_OCPOLARITY_HIGH;
-  sConfigOC.OCNPolarity = TIM_OCNPOLARITY_HIGH;
-  sConfigOC.OCFastMode = TIM_OCFAST_DISABLE;
-  sConfigOC.OCIdleState = TIM_OCIDLESTATE_RESET;
-  sConfigOC.OCNIdleState = TIM_OCNIDLESTATE_RESET;
-  if (HAL_TIM_OC_ConfigChannel(&htim1, &sConfigOC, TIM_CHANNEL_1) != HAL_OK)
-  {
-    Error_Handler();
-  }
-  sBreakDeadTimeConfig.OffStateRunMode = TIM_OSSR_DISABLE;
-  sBreakDeadTimeConfig.OffStateIDLEMode = TIM_OSSI_DISABLE;
-  sBreakDeadTimeConfig.LockLevel = TIM_LOCKLEVEL_OFF;
-  sBreakDeadTimeConfig.DeadTime = 0;
-  sBreakDeadTimeConfig.BreakState = TIM_BREAK_DISABLE;
-  sBreakDeadTimeConfig.BreakPolarity = TIM_BREAKPOLARITY_HIGH;
-  sBreakDeadTimeConfig.AutomaticOutput = TIM_AUTOMATICOUTPUT_DISABLE;
-  if (HAL_TIMEx_ConfigBreakDeadTime(&htim1, &sBreakDeadTimeConfig) != HAL_OK)
   {
     Error_Handler();
   }
@@ -332,9 +304,9 @@ static void MX_TIM2_Init(void)
 
   /* USER CODE END TIM2_Init 1 */
   htim2.Instance = TIM2;
-  htim2.Init.Prescaler = 799;
+  htim2.Init.Prescaler = TIMER_PRESCALER;
   htim2.Init.CounterMode = TIM_COUNTERMODE_UP;
-  htim2.Init.Period = 4999;
+  htim2.Init.Period = TIMER2_PERIOD;
   htim2.Init.ClockDivision = TIM_CLOCKDIVISION_DIV1;
   htim2.Init.AutoReloadPreload = TIM_AUTORELOAD_PRELOAD_DISABLE;
   if (HAL_TIM_Base_Init(&htim2) != HAL_OK)
@@ -359,7 +331,7 @@ static void MX_TIM2_Init(void)
   sConfigIC.ICPolarity = TIM_INPUTCHANNELPOLARITY_RISING;
   sConfigIC.ICSelection = TIM_ICSELECTION_DIRECTTI;
   sConfigIC.ICPrescaler = TIM_ICPSC_DIV1;
-  sConfigIC.ICFilter = 0;
+  sConfigIC.ICFilter = 0x0;
   if (HAL_TIM_IC_ConfigChannel(&htim2, &sConfigIC, TIM_CHANNEL_1) != HAL_OK)
   {
     Error_Handler();
@@ -390,9 +362,9 @@ static void MX_TIM3_Init(void)
 
   /* USER CODE END TIM3_Init 1 */
   htim3.Instance = TIM3;
-  htim3.Init.Prescaler = 799;
+  htim3.Init.Prescaler = 0;
   htim3.Init.CounterMode = TIM_COUNTERMODE_UP;
-  htim3.Init.Period = 99;
+  htim3.Init.Period = TIMER3_PERIOD;
   htim3.Init.ClockDivision = TIM_CLOCKDIVISION_DIV1;
   htim3.Init.AutoReloadPreload = TIM_AUTORELOAD_PRELOAD_DISABLE;
   if (HAL_TIM_Base_Init(&htim3) != HAL_OK)
@@ -415,7 +387,7 @@ static void MX_TIM3_Init(void)
     Error_Handler();
   }
   sConfigOC.OCMode = TIM_OCMODE_PWM1;
-  sConfigOC.Pulse = 10;
+  sConfigOC.Pulse = FAN_DEBUG;
   sConfigOC.OCPolarity = TIM_OCPOLARITY_HIGH;
   sConfigOC.OCFastMode = TIM_OCFAST_DISABLE;
   if (HAL_TIM_PWM_ConfigChannel(&htim3, &sConfigOC, TIM_CHANNEL_1) != HAL_OK)
@@ -476,11 +448,11 @@ static void MX_GPIO_Init(void)
 void Error_Handler(void)
 {
   /* USER CODE BEGIN Error_Handler_Debug */
-  /* User can add his own implementation to report the HAL error return state */
-  __disable_irq();
-  while (1)
-  {
-  }
+	/* User can add his own implementation to report the HAL error return state */
+	__disable_irq();
+	while(1)
+		{
+		}
   /* USER CODE END Error_Handler_Debug */
 }
 
