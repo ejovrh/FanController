@@ -66,6 +66,8 @@ void Error_Handler(void);
 /* USER CODE END EFP */
 
 /* Private defines -----------------------------------------------------------*/
+
+/* USER CODE BEGIN Private defines */
 #define TIMER_PRESCALER 799
 #define TIMER1_PERIOD 1249
 #define TIMER3_PERIOD 99
@@ -88,9 +90,6 @@ void Error_Handler(void);
 #define FAN_TACHO_GPIO_Port GPIOA
 #define FAN_PWM_Pin GPIO_PIN_6
 #define FAN_PWM_GPIO_Port GPIOA
-
-/* USER CODE BEGIN Private defines */
-
 /* USER CODE END Private defines */
 
 #ifdef __cplusplus
