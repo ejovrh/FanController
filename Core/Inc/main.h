@@ -46,7 +46,7 @@ enum ADCChannels
 	  Temp1,  // temperature sensor 1 - PA2
 	  Temp2,  // temperature sensor 1 - PA3
 	  Temp3,	// temperature sensor 1 - PA4
-	  Tempint,  // internal temperature sensor
+	  Tempint,  // internal temperature sensor; value in tenths of degrees Celsius
 	  Vrefint  // internal reference voltage
 };
 /* USER CODE END EC */
@@ -75,6 +75,9 @@ void Error_Handler(void);
 #define ADC_CHANNELS 5
 #define TACHO_BUFFER_LEN 2
 #define ADC_MEASURE_ITERATIONS 8
+#define VREFINT_CAL *((uint16_t*) ((uint32_t) 0x1FFFF7BA))
+#define TS_CAL1 *((uint16_t*) ((uint32_t) 0x1FFFF7B8))
+#define TS_CAL2 *((uint16_t*) ((uint32_t) 0x1FFFF7C2))
 #define TEMP1_SIGNAL_Pin GPIO_PIN_2
 #define TEMP1_SIGNAL_GPIO_Port GPIOA
 #define TEMP2_SIGNAL_Pin GPIO_PIN_3
