@@ -58,6 +58,7 @@ volatile uint32_t adc[ADC_CHANNELS] =
 	{0};	// store for ADC readout
 volatile uint32_t tacho[TACHO_BUFFER_LEN] =
 	{0};	// stores timer2 counter readout
+float VddaConversionConstant;  // pre-computed constant values
 /* USER CODE END PV */
 
 /* Private function prototypes -----------------------------------------------*/
@@ -84,7 +85,7 @@ static void MX_TIM3_Init(void);
 int main(void)
 {
 	/* USER CODE BEGIN 1 */
-
+	VddaConversionConstant = (float) (3300 * VREFINT_CAL) / 4095;  // 3300 - 3.3V in mV
 	/* USER CODE END 1 */
 
 	/* MCU Configuration--------------------------------------------------------*/
