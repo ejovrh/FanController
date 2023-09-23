@@ -40,8 +40,6 @@
 /* USER CODE END PM */
 
 /* Private variables ---------------------------------------------------------*/
-
-/* USER CODE BEGIN PV */
 ADC_HandleTypeDef hadc;
 DMA_HandleTypeDef hdma_adc;
 
@@ -50,28 +48,28 @@ TIM_HandleTypeDef htim2;
 TIM_HandleTypeDef htim3;
 DMA_HandleTypeDef hdma_tim2_ch1;
 
+/* USER CODE BEGIN PV */
 uint32_t adc_buffer[ADC_CHANNELS] =
 	{0};	// store for ADC readout
-uint32_t tacho_buffer[TACHO_BUFFER_LEN] =
-	{0};	// stores timer2 counter readout
+uint32_t tacho[TACHO_BUFFER_LEN] =
+	{0};	// store for raw tacho readout
 
-volatile uint32_t adc[ADC_CHANNELS] =
+volatile int32_t adc[ADC_CHANNELS] =
 	{0};	// store for ADC readout
-volatile uint32_t tacho[TACHO_BUFFER_LEN] =
-	{0};	// stores timer2 counter readout
-float VddaConversionConstant;  // pre-computed constant values
+volatile uint32_t RPM = 0;	// fan RPM
+
 /* USER CODE END PV */
 
 /* Private function prototypes -----------------------------------------------*/
-
-/* USER CODE BEGIN PFP */
 void SystemClock_Config(void);
 static void MX_GPIO_Init(void);
 static void MX_DMA_Init(void);
 static void MX_ADC_Init(void);
-static void MX_TIM2_Init(void);
-static void MX_TIM1_Init(void);
-static void MX_TIM3_Init(void);
+static void MX_TIM2_Init(void);  // PA5 - fan tachometer input
+static void MX_TIM3_Init(void);  // PA6 -fan PWM output
+static void MX_TIM1_Init(void);  // ADC trigger timer
+/* USER CODE BEGIN PFP */
+
 /* USER CODE END PFP */
 
 /* Private user code ---------------------------------------------------------*/
@@ -86,7 +84,7 @@ static void MX_TIM3_Init(void);
 int main(void)
 {
 	/* USER CODE BEGIN 1 */
-	VddaConversionConstant = (float) (3300 * VREFINT_CAL) / 4095;  // 3300 - 3.3V in mV
+
 	/* USER CODE END 1 */
 
 	/* MCU Configuration--------------------------------------------------------*/
@@ -109,11 +107,13 @@ int main(void)
 	MX_GPIO_Init();
 	MX_DMA_Init();
 	MX_ADC_Init();
-	MX_TIM2_Init();
-	MX_TIM1_Init();
-	MX_TIM3_Init();
+	MX_TIM2_Init();  // PA5 - fan tachometer input
+	MX_TIM3_Init();  // PA6 -fan PWM output
+	MX_TIM1_Init();  // ADC trigger timer
 	/* USER CODE BEGIN 2 */
-
+#if USE_SLEEP
+	HAL_PWR_EnableSleepOnExit();	// enter sleep mode after an ISR is over
+#endif
 	/* USER CODE END 2 */
 
 	/* Infinite loop */
@@ -141,9 +141,11 @@ void SystemClock_Config(void)
 	/** Initializes the RCC Oscillators according to the specified parameters
 	 * in the RCC_OscInitTypeDef structure.
 	 */
-	RCC_OscInitStruct.OscillatorType = RCC_OSCILLATORTYPE_HSI;
+	RCC_OscInitStruct.OscillatorType = RCC_OSCILLATORTYPE_HSI | RCC_OSCILLATORTYPE_HSI14;
 	RCC_OscInitStruct.HSIState = RCC_HSI_ON;
+	RCC_OscInitStruct.HSI14State = RCC_HSI14_ON;
 	RCC_OscInitStruct.HSICalibrationValue = RCC_HSICALIBRATION_DEFAULT;
+	RCC_OscInitStruct.HSI14CalibrationValue = 16;
 	RCC_OscInitStruct.PLL.PLLState = RCC_PLL_NONE;
 	if(HAL_RCC_OscConfig(&RCC_OscInitStruct) != HAL_OK)
 		{
@@ -164,7 +166,7 @@ void SystemClock_Config(void)
 }
 
 /**
- * @brief ADC Initialization Function
+ * @brief ADC Initialisation Function
  * @param None
  * @retval None
  */
@@ -185,7 +187,7 @@ static void MX_ADC_Init(void)
 	/** Configure the global features of the ADC (Clock, Resolution, Data Alignment and number of conversion)
 	 */
 	hadc.Instance = ADC1;
-	hadc.Init.ClockPrescaler = ADC_CLOCK_SYNC_PCLK_DIV4;
+	hadc.Init.ClockPrescaler = ADC_CLOCK_ASYNC_DIV1;
 	hadc.Init.Resolution = ADC_RESOLUTION_12B;
 	hadc.Init.DataAlign = ADC_DATAALIGN_RIGHT;
 	hadc.Init.ScanConvMode = ADC_SCAN_DIRECTION_FORWARD;
@@ -252,7 +254,7 @@ static void MX_ADC_Init(void)
 }
 
 /**
- * @brief TIM1 Initialization Function
+ * @brief TIM1 Initialisation Function -- ADC trigger timer
  * @param None
  * @retval None
  */
@@ -300,7 +302,7 @@ static void MX_TIM1_Init(void)
 }
 
 /**
- * @brief TIM2 Initialization Function
+ * @brief TIM2 Initialisation Function	-- PA5 - fan tachometer input
  * @param None
  * @retval None
  */
@@ -322,7 +324,7 @@ static void MX_TIM2_Init(void)
 
 	/* USER CODE END TIM2_Init 1 */
 	htim2.Instance = TIM2;
-	htim2.Init.Prescaler = TIMER_PRESCALER;
+	htim2.Init.Prescaler = 0;
 	htim2.Init.CounterMode = TIM_COUNTERMODE_UP;
 	htim2.Init.Period = TIMER2_PERIOD;
 	htim2.Init.ClockDivision = TIM_CLOCKDIVISION_DIV1;
@@ -355,15 +357,13 @@ static void MX_TIM2_Init(void)
 			Error_Handler();
 		}
 	/* USER CODE BEGIN TIM2_Init 2 */
-	HAL_TIM_Base_Start_IT(&htim2);  // start the timer
-	__HAL_DMA_DISABLE_IT(&hdma_tim2_ch1, DMA_IT_HT | DMA_IT_TE);	// disable error & half-fransfer interrupts
-	HAL_TIM_IC_Start_DMA(&htim2, TIM_CHANNEL_1, tacho_buffer, TACHO_BUFFER_LEN);  // start timer2 DMA
+	HAL_TIM_IC_Start_DMA(&htim2, TIM_CHANNEL_1, tacho, TACHO_BUFFER_LEN);  // start timer2 DMA
 	/* USER CODE END TIM2_Init 2 */
 
 }
 
 /**
- * @brief TIM3 Initialization Function
+ * @brief TIM3 Initialisation Function -- PA6 - fan PWM output
  * @param None
  * @retval None
  */
@@ -410,7 +410,7 @@ static void MX_TIM3_Init(void)
 			Error_Handler();
 		}
 	sConfigOC.OCMode = TIM_OCMODE_PWM1;
-	sConfigOC.Pulse = FAN_DEBUG;
+	sConfigOC.Pulse = FAN_DUTY_CYCLE;  // 0 - off by default
 	sConfigOC.OCPolarity = TIM_OCPOLARITY_HIGH;
 	sConfigOC.OCFastMode = TIM_OCFAST_DISABLE;
 	if(HAL_TIM_PWM_ConfigChannel(&htim3, &sConfigOC, TIM_CHANNEL_1) != HAL_OK)
@@ -444,7 +444,7 @@ static void MX_DMA_Init(void)
 }
 
 /**
- * @brief GPIO Initialization Function
+ * @brief GPIO Initialisation Function
  * @param None
  * @retval None
  */
@@ -460,6 +460,12 @@ static void MX_GPIO_Init(void)
 	__HAL_RCC_GPIOF_CLK_ENABLE();
 	__HAL_RCC_GPIOA_CLK_ENABLE();
 
+	/*Configure GPIO pin Output Level */
+	HAL_GPIO_WritePin(GPIOA, LED_RED_Pin | LED_GREEN_Pin, GPIO_PIN_SET);
+
+	/*Configure GPIO pin Output Level */
+	HAL_GPIO_WritePin(debug_out_GPIO_Port, debug_out_Pin, GPIO_PIN_RESET);
+
 	/*Configure GPIO pins : PB8 PB0 PB1 PB3
 	 PB4 PB5 PB6 PB7 */
 	GPIO_InitStruct.Pin = GPIO_PIN_8 | GPIO_PIN_0 | GPIO_PIN_1 | GPIO_PIN_3 | GPIO_PIN_4 | GPIO_PIN_5 | GPIO_PIN_6 | GPIO_PIN_7;
@@ -473,9 +479,29 @@ static void MX_GPIO_Init(void)
 	GPIO_InitStruct.Pull = GPIO_NOPULL;
 	HAL_GPIO_Init(GPIOF, &GPIO_InitStruct);
 
-	/*Configure GPIO pins : PA0 PA1 PA7 PA9
-	 PA10 PA15 */
-	GPIO_InitStruct.Pin = GPIO_PIN_0 | GPIO_PIN_1 | GPIO_PIN_7 | GPIO_PIN_9 | GPIO_PIN_10 | GPIO_PIN_15;
+#if USE_DEBUG_PIN
+	/*Configure GPIO pins : LED_RED_Pin LED_GREEN_Pin debug_out_Pin */
+	GPIO_InitStruct.Pin = LED_RED_Pin | LED_GREEN_Pin | debug_out_Pin;
+	GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
+	GPIO_InitStruct.Pull = GPIO_NOPULL;
+	GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
+	HAL_GPIO_Init(GPIOA, &GPIO_InitStruct);
+#else
+	/*Configure GPIO pins : LED_RED_Pin LED_GREEN_Pin */
+	GPIO_InitStruct.Pin = LED_RED_Pin | LED_GREEN_Pin;
+	GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
+	GPIO_InitStruct.Pull = GPIO_NOPULL;
+	GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
+	HAL_GPIO_Init(GPIOA, &GPIO_InitStruct);
+
+	GPIO_InitStruct.Pin = debug_out_Pin;
+	GPIO_InitStruct.Mode = GPIO_MODE_ANALOG;
+	GPIO_InitStruct.Pull = GPIO_NOPULL;
+	HAL_GPIO_Init(GPIOA, &GPIO_InitStruct);
+#endif
+
+	/*Configure GPIO pins : PA7 PA9 PA10 */
+	GPIO_InitStruct.Pin = GPIO_PIN_7 | GPIO_PIN_9 | GPIO_PIN_10;
 	GPIO_InitStruct.Mode = GPIO_MODE_ANALOG;
 	GPIO_InitStruct.Pull = GPIO_NOPULL;
 	HAL_GPIO_Init(GPIOA, &GPIO_InitStruct);
