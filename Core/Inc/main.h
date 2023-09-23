@@ -47,7 +47,7 @@ enum ADCChannels
 	  Temp2,  // temperature sensor 1 - PA3
 	  Temp3,	// temperature sensor 1 - PA4
 	  Tempint,  // internal temperature sensor; value in tenths of degrees Celsius
-	  Vrefint  // internal reference voltage
+	  Vdda  // internal reference voltage
 };
 /* USER CODE END EC */
 
@@ -63,23 +63,43 @@ void Error_Handler(void);
 
 /* USER CODE BEGIN EFP */
 
+/*
+ * fan PWM current consumption
+ * duty cycle - RPM (measured) - current/mA - tacho signal period (measured approx.)/ms
+ * 		100% - 2271 RPM - 64 mA - 13.4
+ * 		90% - 2082 RPM - 54 mA - 14
+ * 		80% - 1875 RPM - 44 mA - 16
+ * 		70% - 1665 RPM - 37 mA - 18
+ * 		60% - 1428 RPM - 30 mA - 21
+ * 		50% - 1200 RPM - 24 mA - 26
+ * 		40% - 936 RPM - 19 mA - 32
+ * 		30% - 681 RPM - 16 mA - 44
+ * 		20% - 417 RPM - 13 mA - 72
+ * 		10% - 179 RPM - 11 mA - 170
+ * 		0% - 0 RPM - 9 mA
+ */
+
 /* USER CODE END EFP */
 
 /* Private defines -----------------------------------------------------------*/
-
-/* USER CODE BEGIN Private defines */
-#define TIMER_PRESCALER 799
-#define TIMER1_PERIOD 1249
-#define TIMER3_PERIOD 99
-#define FAN_OFF 0
-#define FAN_DEBUG 70
-#define TIMER2_PERIOD 1250
-#define ADC_CHANNELS 5
-#define TACHO_BUFFER_LEN 2
-#define ADC_MEASURE_ITERATIONS 8
-#define VREFINT_CAL *((uint16_t*) ((uint32_t) 0x1FFFF7BA))
-#define TS_CAL1 *((uint16_t*) ((uint32_t) 0x1FFFF7B8))
 #define TS_CAL2 *((uint16_t*) ((uint32_t) 0x1FFFF7C2))
+#define FAN_DUTY_CYCLE 0	// fan duty cycle, 0 to 100%
+#define TS_CAL1 *((uint16_t*) ((uint32_t) 0x1FFFF7B8))
+#define TEMPERATURE_OFFSET -35	// correction value (offset) for temperature calculation
+#define VREFINT_CAL *((uint16_t*) ((uint32_t) 0x1FFFF7BA))
+#define ADC_CHANNELS 5 // 3 external (IN2,3,4) and one internal temperature channels, Vrefint
+#define TIMER1_PERIOD 124 // ADC trigger timer
+#define ADC_MEASURE_ITERATIONS 80 // measure timer1 period times this number == 1s
+#define TIMER2_PERIOD 0xFFFFFFFF // PA5 - fan tacho
+#define TIMER3_PERIOD 99 // PA6 - fan PWM
+#define TIMER_PRESCALER 799
+#define TACHO_BUFFER_LEN 10 // size of ADC readout buffer
+#define USE_DEBUG_PIN 0 // make use of PA15
+#define USE_SLEEP 1 // enter sleep mode once an ISR is finished
+#define LED_RED_Pin GPIO_PIN_0
+#define LED_RED_GPIO_Port GPIOA
+#define LED_GREEN_Pin GPIO_PIN_1
+#define LED_GREEN_GPIO_Port GPIOA
 #define TEMP1_SIGNAL_Pin GPIO_PIN_2
 #define TEMP1_SIGNAL_GPIO_Port GPIOA
 #define TEMP2_SIGNAL_Pin GPIO_PIN_3
@@ -90,6 +110,11 @@ void Error_Handler(void);
 #define FAN_TACHO_GPIO_Port GPIOA
 #define FAN_PWM_Pin GPIO_PIN_6
 #define FAN_PWM_GPIO_Port GPIOA
+#define debug_out_Pin GPIO_PIN_15
+#define debug_out_GPIO_Port GPIOA
+
+/* USER CODE BEGIN Private defines */
+
 /* USER CODE END Private defines */
 
 #ifdef __cplusplus
